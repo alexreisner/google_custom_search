@@ -1,0 +1,8 @@
+= Changelog
+
+Per-release changes to Handler.
+
+
+== 0.8.0 (2009 Oct 12)
+
+First release.

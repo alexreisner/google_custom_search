@@ -1,0 +1,67 @@
+= Google Custom Search
+
+Ruby API to Google Custom Search Engine (http://www.google.com/cse). Works with the paid version of CSE where you get results in XML format.
+
+
+== 1. Install
+
+Install either as a Rails plugin:
+
+  script/plugin install git://github.com/alexreisner/google_custom_search.git
+
+or as a gem:
+
+  # add to config/environment.rb:
+  config.gem "google_custom_search", :source => "http://gemcutter.org/"
+  
+  # at command prompt:
+  sudo rake gems:install
+
+or as a standalone gem (outside of Rails):
+
+  sudo gem install google_custom_search --source http://gemcutter.org
+
+
+== 2. Configure
+
+Firstly, you MUST define a constant in your application called <tt>GOOGLE_SEARCH_CX</tt>. For example, if you're using Rails, create a file <tt>config/initializers/google_custom_search.rb</tt>:
+
+  GOOGLE_SEARCH_CX = "..."
+
+You can find the CX value for your custom search engine via the search control panel on Google's site (click the "Get code" link and you'll see a hidden "cx" field in the sample HTML form).
+
+If you're working outside of Rails you'll also need some +require+ statements:
+
+  require 'rubygems'
+  require 'rexml/document'
+  require 'google_custom_search'
+
+
+== 3. Use
+
+To perform a search:
+
+  results = GoogleCustomSearch.search("Hank Aaron")
+  
+The +results+ variable is now a GoogleCustomSearch::ResultSet object:
+  
+  results.total       # 5080
+  results.pages       # array of GoogleCustomSearch::Result objects
+  results.suggestion  # string with suggested search term, if any
+
+Iterate through the results:
+
+  results.pages.each do |r|
+    r.title           # page title
+    r.url             # page URL
+    r.description     # Google's excerpt, with terms highlighted
+  end
+
+
+== Future
+
+* access to all data returned by Google
+* support for features of CSE free version
+
+
+Copyright (c) 2009 Alex Reisner, released under the MIT license
