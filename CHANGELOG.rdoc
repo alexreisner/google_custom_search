@@ -1,8 +1,8 @@
 = Changelog
 
-Per-release changes to Handler.
+Per-release changes to GoogleCustomSearch.
 
 
-== 0.8.0 (2009 Oct 12)
+== 0.3.0 (2009 Oct 14)
 
 First release.
