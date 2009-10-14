@@ -24,7 +24,7 @@ or as a standalone gem (outside of Rails):
 
 == 2. Configure
 
-Firstly, you MUST define a constant in your application called <tt>GOOGLE_SEARCH_CX</tt>. For example, if you're using Rails, create a file <tt>config/initializers/google_custom_search.rb</tt>:
+You *must* define a constant in your application called <tt>GOOGLE_SEARCH_CX</tt>. For example, if you're using Rails, create a file <tt>config/initializers/google_custom_search.rb</tt>:
 
   GOOGLE_SEARCH_CX = "..."
 
@@ -45,15 +45,15 @@ To perform a search:
   
 The +results+ variable is now a GoogleCustomSearch::ResultSet object:
   
-  results.total       # 5080
+  results.total       # number of results (integer)
   results.pages       # array of GoogleCustomSearch::Result objects
   results.suggestion  # string with suggested search term, if any
 
 Iterate through the results:
 
   results.pages.each do |r|
-    r.title           # page title
-    r.url             # page URL
+    r.title           # result title
+    r.url             # result URL
     r.description     # Google's excerpt, with terms highlighted
   end
 
@@ -62,6 +62,7 @@ Iterate through the results:
 
 * access to all data returned by Google
 * support for features of CSE free version
+* support for multiple CSEs in one app (GOOGLE_SEARCH_CX should be a hash)
 
 
 Copyright (c) 2009 Alex Reisner, released under the MIT license
