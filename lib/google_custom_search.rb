@@ -3,6 +3,7 @@
 # http://www.google.com/coop/docs/cse/resultsxml.html
 #
 module GoogleCustomSearch
+  extend self
   
   ##
   # Quick Struct-based class to hold a collection of search result data.
@@ -17,7 +18,7 @@ module GoogleCustomSearch
   ##
   # Search the site.
   #
-  def self.search(query, offset = 0, length = 20)
+  def search(query, offset = 0, length = 20)
     
     # Get and parse results.
     url = url(query, offset, length)
@@ -42,7 +43,7 @@ module GoogleCustomSearch
   ##
   # Build search request URL.
   #
-  def self.url(query, offset = 0, length = 20)
+  def url(query, offset = 0, length = 20)
     params = {
       :q      => query,
       :start  => offset,
@@ -57,7 +58,7 @@ module GoogleCustomSearch
   ##
   # Query Google, and make sure it responds.
   #
-  def self.fetch_xml(url)
+  def fetch_xml(url)
     begin
       resp = nil
       timeout(3) do
@@ -71,7 +72,7 @@ module GoogleCustomSearch
   # Transform an array of Google search results (XML parsed by REXML) into
   # a more useful format.
   #
-  def self.parse_results(results)
+  def parse_results(results)
     out = []
     results = [results] if results.is_a?(Hash) # no array if only one result
     results.each do |r|
