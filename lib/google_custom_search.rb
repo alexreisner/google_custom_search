@@ -52,6 +52,10 @@ module GoogleCustomSearch
       :output => "xml_no_dtd",
       :cx     => GOOGLE_SEARCH_CX
     }
+    begin
+      params.merge!(GOOGLE_SEARCH_PARAMS)
+    rescue NameError
+    end
     "http://www.google.com/search?" + params.to_query
   end
   

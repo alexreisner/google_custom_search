@@ -34,6 +34,13 @@ You *must* define a constant in your application called <tt>GOOGLE_SEARCH_CX</tt
 
 You can find the CX value for your custom search engine via the search control panel on Google's site (click the "Get code" link and you'll see a hidden "cx" field in the sample HTML form).
 
+Optionally, you can set default Google search params, such as encoding, by setting up the <tt>GOOGLE_SEARCH_PARAMS</tt> hash in the same initializer:
+
+  GOOGLE_SEARCH_PARAMS = {
+    :ie => 'utf8',
+    :oe => 'utf8'
+  }
+
 If you're working outside of Rails you'll also need some +require+ statements:
 
   require 'rubygems'
