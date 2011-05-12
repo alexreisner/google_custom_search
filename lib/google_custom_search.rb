@@ -81,9 +81,9 @@ module GoogleCustomSearch
     results = [results] if results.is_a?(Hash) # no array if only one result
     results.each do |r|
       out << Result.new(
-        r['U'],                         # url
-        r['T'].sub(/ \[[^\]]*\]$/, ''), # title
-        r['S'].gsub('<br>', '')         # desciption
+        r['U'],                               # url
+        r['T'].try(:sub, / \[[^\]]*\]$/, ''), # title
+        r['S'].try(:gsub, '<br>', '')         # desciption
       )
     end
     out
