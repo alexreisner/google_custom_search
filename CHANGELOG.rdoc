@@ -1,8 +1,12 @@
 = Changelog
 
-Per-release changes to GoogleCustomSearch.
+Per-release changes to google_custom_search.
 
+== 0.3.1 (2011 May 12)
+
+* Fix: prevent error when no description in search results (thanks github.com/mlineen).
+* Allow default params to be configured in initializer via GOOGLE_SEARCH_PARAMS hash (thanks github.com/dpeckham). 
 
 == 0.3.0 (2009 Oct 14)
 
-First release.
+* First release.

@@ -4,29 +4,27 @@ This project is a Ruby API to Google's Custom Search Engine (http://www.google.c
 
 If you want a Google-like search engine for your web site, why not use Google? For $100/yr (more if you have over 1,000 pages) you can get access to Google search results for your site in XML format. The google_custom_search gem helps you access this web service and publish the results on your site however you like (all covered under Google's acceptable use policy).
 
-<b>Google Custom Search is currently compatible with Rails 2.x and Rails 3.</b>
+Google Custom Search is currently compatible with Rails 2.x and Rails 3.
 
 
-== 1. Install
+== Install
 
-Install either as a Rails plugin:
+=== As a Gem
 
-  script/plugin install git://github.com/alexreisner/google_custom_search.git
+Add to your Gemfile:
 
-or as a gem:
+  gem "google_custom_search"
 
-  # add to config/environment.rb:
-  config.gem "google_custom_search", :source => "http://gemcutter.org/"
-  
-  # at command prompt:
-  sudo rake gems:install
+and run at the command prompt:
 
-or as a standalone gem (outside of Rails):
+  bundle install
 
-  sudo gem install google_custom_search --source http://gemcutter.org
+=== Or As a Plugin
+
+  rails plugin install git://github.com/alexreisner/google_custom_search.git
 
 
-== 2. Configure
+== Configure
 
 You *must* define a constant in your application called <tt>GOOGLE_SEARCH_CX</tt>. For example, if you're using Rails, create a file <tt>config/initializers/google_custom_search.rb</tt>:
 
@@ -48,14 +46,14 @@ If you're working outside of Rails you'll also need some +require+ statements:
   require 'google_custom_search'
 
 
-== 3. Use
+== Use
 
 To perform a search:
 
   results = GoogleCustomSearch.search("Hank Aaron")
-  
+
 The +results+ variable is now a GoogleCustomSearch::ResultSet object:
-  
+
   results.total            # number of results (integer)
   results.pages            # array of result objects
   results.suggestion       # suggested search term, if any
@@ -77,4 +75,4 @@ Iterate through the results:
 * support for multiple CSEs in one app (GOOGLE_SEARCH_CX should be a hash)
 
 
-Copyright (c) 2009 Alex Reisner, released under the MIT license
+Copyright (c) 2009-11 Alex Reisner, released under the MIT license
