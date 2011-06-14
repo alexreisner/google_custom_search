@@ -18,7 +18,10 @@ module GoogleCustomSearch
   ##
   # Search the site.
   #
-  def search(query, offset = 0, length = 20, params = {})
+  def search(query, page = 1, params = {})
+    page    = page.to_i
+    length  = params.delete(:length) || 20
+    offset  = (page * length) - length
     
     # Get and parse results.
     url = url(query, offset, length, params)
@@ -36,7 +39,6 @@ module GoogleCustomSearch
       ResultSet.new(0, [], nil)
     end
   end
-  
   
   private # -------------------------------------------------------------------
   
