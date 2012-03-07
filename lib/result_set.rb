@@ -21,8 +21,10 @@ class GoogleCustomSearch::ResultSet
 
   def self.parse_labels(xml_hash)
     return {} unless context = xml_hash['Context'] and facets = context['Facet']
-    facets.inject({}) do |h, facet_item|
-      facet_item['FacetItem'].each do |element|
+    facets.map do |f|
+      (fi = f['FacetItem']).is_a?(Array) ? fi : [fi]
+    end.inject({}) do |h, facet_item|
+      facet_item.each do |element|
         h[element['label']] = element['anchor_text']
       end
       h
