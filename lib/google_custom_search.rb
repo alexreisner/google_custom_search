@@ -2,13 +2,16 @@
 # Add search functionality (via Google Custom Search). Protocol reference at:
 # http://www.google.com/coop/docs/cse/resultsxml.html
 #
+require 'net/http'
+require 'active_support/core_ext'
+
 module GoogleCustomSearch
   extend self
   
   ##
   # Quick Struct-based class to hold a collection of search result data.
   #
-  class ResultSet < Struct.new(:total, :pages, :suggestion); end
+  class ResultSet < Struct.new(:total, :pages, :suggestion, :labels); end
 
   ##
   # Quick Struct-based class to hold data for a single search result.
