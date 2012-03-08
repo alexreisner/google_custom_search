@@ -11,5 +11,7 @@ require 'google_custom_search'
 # GOOGLE_SEARCH_CX = '003630504832992121813:duvzt8xkd_8'
 
 # fbi.gov
-
 GOOGLE_SEARCH_CX = '004748461833896749646:e41lgwqry7w'
+
+# Print URLs
+$debug = true
