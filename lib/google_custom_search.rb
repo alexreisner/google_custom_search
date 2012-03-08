@@ -54,6 +54,7 @@ module GoogleCustomSearch
   # Query Google, and make sure it responds.
   #
   def fetch_xml(url)
+    puts url
     begin
       resp = nil
       timeout(3) do
