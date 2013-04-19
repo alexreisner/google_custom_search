@@ -40,9 +40,8 @@ module GoogleCustomSearch
   ##
   # Expose configuration object
   #
-  attr_reader :configuration
   def configuration
-    @configuration ||= GoogleCustomSearch::Configuration
+    @configuration ||= GoogleCustomSearch::Configuration.new
   end
 
   ##
