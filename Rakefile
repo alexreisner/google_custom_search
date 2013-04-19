@@ -1,19 +1,19 @@
-require 'bundler'
-Bundler::GemHelper.install_tasks
+require 'bundler/setup'
+require "bundler/gem_tasks"
+require 'rake/clean'
+require "rspec/core/rake_task"
 
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/*_test.rb'
-  test.verbose = true
-end
+CLEAN.include('pkg')
+CLEAN.include('coverage')
 
-task :default => :test
+RSpec::Core::RakeTask.new('spec')
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "Google Custom Search #{GoogleCustomSearch::VERSION}"
-  rdoc.rdoc_files.include('*.rdoc')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+task :default => :spec
+
+namespace :spec do
+  desc "Run all specs tagged with :focus => true"
+  RSpec::Core::RakeTask.new(:focus) do |t|
+    t.rspec_opts = "--tag focus"
+    t.verbose = true
+  end
 end
