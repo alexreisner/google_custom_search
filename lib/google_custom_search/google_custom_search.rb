@@ -37,6 +37,20 @@ module GoogleCustomSearch
     end
   end
 
+  ##
+  # Expose configuration object
+  #
+  attr_reader :configuration
+  def configuration
+    @configuration ||= GoogleCustomSearch::Configuration
+  end
+
+  ##
+  # Configuration helper method
+  #
+  def configure
+    yield(configuration) if block_given?
+  end
 
   private # -------------------------------------------------------------------
 
