@@ -1,3 +1,5 @@
+{<img src="https://travis-ci.org/cosm/google_custom_search.png?branch=master" alt="Build Status" />}[https://travis-ci.org/cosm/google_custom_search]
+
 = Google Custom Search
 
 This project is a Ruby API to Google's Custom Search Engine (http://www.google.com/cse).
