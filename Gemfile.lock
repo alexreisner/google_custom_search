@@ -1,0 +1,51 @@
+PATH
+  remote: .
+  specs:
+    google_custom_search (0.3.2)
+      addressable (>= 2.3.4)
+      multi_xml (>= 0.5.3)
+      ox (>= 1.5.9)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.3.4)
+    columnize (0.3.6)
+    crack (0.3.2)
+    debugger (1.5.0)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.2.0)
+    debugger-linecache (1.2.0)
+    debugger-ruby_core_source (1.2.0)
+    diff-lcs (1.2.3)
+    multi_json (1.7.2)
+    multi_xml (0.5.3)
+    ox (2.0.0)
+    rake (10.0.4)
+    rspec (2.13.0)
+      rspec-core (~> 2.13.0)
+      rspec-expectations (~> 2.13.0)
+      rspec-mocks (~> 2.13.0)
+    rspec-core (2.13.1)
+    rspec-expectations (2.13.0)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.13.1)
+    simplecov (0.7.1)
+      multi_json (~> 1.0)
+      simplecov-html (~> 0.7.1)
+    simplecov-html (0.7.1)
+    webmock (1.11.0)
+      addressable (>= 2.2.7)
+      crack (>= 0.3.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  debugger
+  google_custom_search!
+  rake
+  rspec
+  simplecov
+  webmock
