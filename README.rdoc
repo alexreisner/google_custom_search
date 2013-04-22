@@ -1,4 +1,5 @@
 {<img src="https://travis-ci.org/cosm/google_custom_search.png?branch=master" alt="Build Status" />}[https://travis-ci.org/cosm/google_custom_search]
+{<img src="https://gemnasium.com/cosm/google_custom_search.png" alt="Dependency Status" />}[https://gemnasium.com/cosm/google_custom_search]
 
 = Google Custom Search
 
