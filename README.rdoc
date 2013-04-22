@@ -1,11 +1,13 @@
+{<img src="https://travis-ci.org/cosm/google_custom_search.png?branch=master" alt="Build Status" />}[https://travis-ci.org/cosm/google_custom_search]
+{<img src="https://gemnasium.com/cosm/google_custom_search.png" alt="Dependency Status" />}[https://gemnasium.com/cosm/google_custom_search]
+
 = Google Custom Search
 
 This project is a Ruby API to Google's Custom Search Engine (http://www.google.com/cse).
 
 If you want a Google-like search engine for your web site, why not use Google? For $100/yr (more if you have over 1,000 pages) you can get access to Google search results for your site in XML format. The google_custom_search gem helps you access this web service and publish the results on your site however you like (all covered under Google's acceptable use policy).
 
-Google Custom Search is currently compatible with Rails 2.x and Rails 3.
-
+Google Custom Search is currently compatible with Rails 3. It should also work with Rails 2.x but that hasn't been tested.
 
 == Install
 
@@ -19,57 +21,49 @@ and run at the command prompt:
 
   bundle install
 
-=== Or As a Plugin
-
-  rails plugin install git://github.com/alexreisner/google_custom_search.git
-
-
 == Configure
 
-You *must* define a constant in your application called <tt>GOOGLE_SEARCH_CX</tt>. For example, if you're using Rails, create a file <tt>config/initializers/google_custom_search.rb</tt>:
+You *must* configure the gem before use. If you are using Rails, the best way to do this is to create an initializer in <tt>config/initializers/google_custom_search.rb</tt>:
 
-  GOOGLE_SEARCH_CX = "..."
+  GoogleCustomSearch.configure do |config|
+    config.cx = "1234abcd" # your search engine ID obtained from the Google Custom Search setup page
+    config.default_params = { :ie => 'utf8', :oe => 'utf8' } # any default params you want to add to all requests
+    config.secure = true # if set to true make requests over SSL
+    config.timeout = 5 # timeout in seconds to pass to Net::HTTP
+  end
 
-You can find the CX value for your custom search engine via the search control panel on Google's site (click the "Get code" link and you'll see a hidden "cx" field in the sample HTML form).
-
-Optionally, you can set default Google search params, such as encoding, by setting up the <tt>GOOGLE_SEARCH_PARAMS</tt> hash in the same initializer:
-
-  GOOGLE_SEARCH_PARAMS = {
-    :ie => 'utf8',
-    :oe => 'utf8'
-  }
-
-If you're working outside of Rails you'll also need some +require+ statements:
-
-  require 'rubygems'
-  require 'rexml/document'
-  require 'google_custom_search'
-
+If you aren't using Rails, then you just need to add this initialization block somewhere that will be executed as your app boots.
 
 == Use
 
 To perform a search:
 
-  results = GoogleCustomSearch.search("Hank Aaron")
+  search = GoogleCustomSearch.search("Hank Aaron")
+  search = GoogleCustomSearch.search("Hank Aaron", :offset => 20, :length => 10)
 
 The +results+ variable is now a GoogleCustomSearch::ResultSet object:
 
-  results.total            # number of results (integer)
-  results.pages            # array of result objects
-  results.suggestion       # suggested search term, if any
+  search.total            # total number of results (integer)
+  search.per_page         # current page size
+  search.results          # array of result objects
+  search.suggestion       # suggested search term, if any
+  search.start_index      # index of the first result in the current page
+  search.end_index        # index of the last result in the current page
+  search.page             # current page number (calculated from above values)
+  search.total_pages      # total number of pages for the current query
+
 
 Iterate through the results:
 
   results.pages.each do |result|
-    result.title           # result title
+    result.title           # result title, with terms highlighted
     result.url             # result URL
-    result.description     # excerpt, with terms highlighted
+    result.excerpt         # excerpt, with terms highlighted
   end
 
 
 == Future
 
-* prevent NameError when GOOGLE_SEARCH_CX is missing: show nice msg
 * access to all data returned by Google
 * support for features of CSE free version
 * support for multiple CSEs in one app (GOOGLE_SEARCH_CX should be a hash)
