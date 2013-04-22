@@ -10,7 +10,6 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Alex Reisner"]
   gem.email         = ["alex@alexreisner.com"]
   gem.homepage      = "http://github.com/alexreisner/google_custom_search"
-  gem.date          = Date.today.to_s
   gem.summary       = "Ruby interface to Google Custom Search Engine."
   gem.description   = "Ruby interface to Google Custom Search Engine. Works with the paid version of CSE where you get results in XML format."
   gem.files         = `git ls-files`.split($/)
