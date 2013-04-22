@@ -120,6 +120,9 @@ def no_result_xml
   <PARAM name="hl" value="en" original_value="en" url_escaped_value="en" js_escaped_value="en"></PARAM><PARAM name="oe" value="UTF-8" original_value="UTF-8" url_escaped_value="UTF-8" js_escaped_value="UTF-8"></PARAM>
   <PARAM name="ie" value="UTF-8" original_value="UTF-8" url_escaped_value="UTF-8" js_escaped_value="UTF-8"></PARAM>
   <PARAM name="boostcse" value="0" original_value="0" url_escaped_value="0" js_escaped_value="0"></PARAM>
+  <Spelling>
+    <Suggestion q="squash"><b><i>squash</i></b></Suggestion>
+  </Spelling>
   <Context>
     <title>COSM Search</title>
   </Context>

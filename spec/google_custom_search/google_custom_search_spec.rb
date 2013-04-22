@@ -192,6 +192,10 @@ describe GoogleCustomSearch do
         it "should return an empty array of results" do
           @results.results.should == []
         end
+
+        it "should still return suggestion if present" do
+          @results.suggestion.should == "squash"
+        end
       end
 
       context "with bad xml" do
