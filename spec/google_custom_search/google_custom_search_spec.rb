@@ -45,7 +45,7 @@ describe GoogleCustomSearch do
       end
 
       it "should build the correct search uri" do
-        @uri.to_s.should == "https://www.google.com/cse?client=google-csbe&cx=1234&ie=utf8&num=10&output=xml_no_dtd&q=raspberry&start=10"
+        @uri.to_s.should == "https://www.google.com:443/cse?client=google-csbe&cx=1234&ie=utf8&num=10&output=xml_no_dtd&q=raspberry&start=10"
       end
 
       it "should return non https if secure is false" do
@@ -58,7 +58,7 @@ describe GoogleCustomSearch do
     context "search" do
       context "with a single result" do
         before(:each) do
-          @search_stub = stub_request(:get, "https://www.google.com:80/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=banana&start=0").
+          @search_stub = stub_request(:get, "https://www.google.com:443/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=banana&start=0").
             with(:headers => {'User-Agent' => GoogleCustomSearch.send(:user_agent) }).
             to_return(:status => 200, :body => single_result_xml)
 
@@ -114,7 +114,7 @@ describe GoogleCustomSearch do
 
       context "multiple results" do
         before(:each) do
-          @search_stub = stub_request(:get, "https://www.google.com:80/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
+          @search_stub = stub_request(:get, "https://www.google.com:443/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
             with(:headers => {'User-Agent' => GoogleCustomSearch.send(:user_agent) }).
             to_return(:status => 200, :body => multiple_result_xml)
 
@@ -174,7 +174,7 @@ describe GoogleCustomSearch do
 
       context "no results" do
         before(:each) do
-          @search_stub = stub_request(:get, "https://www.google.com:80/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
+          @search_stub = stub_request(:get, "https://www.google.com:443/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
             with(:headers => {'User-Agent' => GoogleCustomSearch.send(:user_agent) }).
             to_return(:status => 200, :body => no_result_xml)
 
@@ -200,7 +200,7 @@ describe GoogleCustomSearch do
 
       context "with bad xml" do
         it "should raise our exception" do
-          stub_request(:get, "https://www.google.com:80/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
+          stub_request(:get, "https://www.google.com:443/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
             with(:headers => {'User-Agent' => GoogleCustomSearch.send(:user_agent) }).
             to_return(:status => 200, :body => "bad xml")
 
@@ -212,7 +212,7 @@ describe GoogleCustomSearch do
 
       context "with http errors" do
         it "should raise InvalidRequest on a 300 type response" do
-          stub_request(:get, "https://www.google.com:80/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
+          stub_request(:get, "https://www.google.com:443/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
             with(:headers => {'User-Agent' => GoogleCustomSearch.send(:user_agent) }).
             to_return(:status => 302)
 
@@ -222,7 +222,7 @@ describe GoogleCustomSearch do
         end
 
         it "should raise InvalidRequest on a 400 type response" do
-          stub_request(:get, "https://www.google.com:80/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
+          stub_request(:get, "https://www.google.com:443/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
             with(:headers => {'User-Agent' => GoogleCustomSearch.send(:user_agent) }).
             to_return(:status => 404)
 
@@ -232,7 +232,7 @@ describe GoogleCustomSearch do
         end
 
         it "should raise ServerError on a 500 type response" do
-          stub_request(:get, "https://www.google.com:80/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
+          stub_request(:get, "https://www.google.com:443/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
             with(:headers => {'User-Agent' => GoogleCustomSearch.send(:user_agent) }).
             to_return(:status => 500)
 
@@ -244,7 +244,7 @@ describe GoogleCustomSearch do
 
       context "with a network timeout" do
         it "should raise our timeout exception on timeout" do
-          stub_request(:get, "https://www.google.com:80/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
+          stub_request(:get, "https://www.google.com:443/cse?client=google-csbe&cx=1234&ie=utf8&num=20&output=xml_no_dtd&q=raspberry&start=0").
             with(:headers => {'User-Agent' => GoogleCustomSearch.send(:user_agent) }).
             to_timeout
 

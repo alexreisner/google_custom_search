@@ -77,6 +77,7 @@ module GoogleCustomSearch
 
     if GoogleCustomSearch.configuration.secure
       uri = Addressable::URI.parse("https://www.google.com/cse")
+      uri.port = 443
     else
       uri = Addressable::URI.parse("http://www.google.com/cse")
     end
