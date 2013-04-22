@@ -32,7 +32,7 @@ module GoogleCustomSearch
                     :start_index => data['RES']['SN'].to_i,
                     :end_index => data['RES']['EN'].to_i,
                     :per_page => data['PARAM'].detect { |param| param["name"] == "num" }["value"].to_i,
-                    :suggestion => data['SPELLING'] ? data['SPELLING']['SUGGESTION'] : nil,
+                    :suggestion => data['Spelling'] ? data['Spelling']['Suggestion']['q'] : nil,
                     :results => parse_results(data['RES']['R']))
 
     else

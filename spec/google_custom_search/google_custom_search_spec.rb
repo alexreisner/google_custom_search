@@ -155,6 +155,10 @@ describe GoogleCustomSearch do
           @results.results.first.is_a?(GoogleCustomSearch::Result).should == true
         end
 
+        it "should return a spelling suggestion if present" do
+          @results.suggestion.should == "raspberry"
+        end
+
         context "the results" do
           before(:each) do
             @result = @results.results.first
