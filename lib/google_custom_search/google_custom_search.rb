@@ -36,7 +36,7 @@ module GoogleCustomSearch
                     :results => parse_results(data['RES']['R']))
 
     else
-      ResultSet.new
+      ResultSet.new(:suggestion => data['Spelling'] ? data['Spelling']['Suggestion']['q'] : nil)
     end
   end
 
