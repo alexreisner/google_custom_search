@@ -1,3 +1,6 @@
+require 'net/http'
+require 'addressable/uri'
+
 ##
 # Add search functionality (via Google Custom Search). Protocol reference at:
 # http://www.google.com/coop/docs/cse/resultsxml.html
@@ -6,34 +9,34 @@ module GoogleCustomSearch
   extend self
 
   ##
-  # Quick Struct-based class to hold a collection of search result data.
-  #
-  class ResultSet < Struct.new(:total, :pages, :suggestion); end
-
-  ##
-  # Quick Struct-based class to hold data for a single search result.
-  #
-  class Result < Struct.new(:url, :title, :description); end
-
-  ##
   # Search the site.
   #
-  def search(query, offset = 0, length = 20)
-
+  def search(query, options = {})
     # Get and parse results.
-    url = url(query, offset, length)
-    return nil unless xml = fetch_xml(url)
-    data = Hash.from_xml(xml)['GSP']
+    uri = build_uri(query, options)
+    begin
+      return nil unless xml = fetch_xml(uri)
+    rescue Timeout::Error => e
+      raise GoogleCustomSearch::TimeoutError, e.message
+    end
+
+    begin
+      data = MultiXml.parse(xml)['GSP']
+    rescue MultiXml::ParseError => e
+      raise GoogleCustomSearch::InvalidXML, e.message
+    end
 
     # Extract and return search result data, if exists.
     if data['RES']
-      ResultSet.new(
-        data['RES']['M'].to_i,                                  # total
-        parse_results(data['RES']['R']),                        # pages
-        data['SPELLING'] ? data['SPELLING']['SUGGESTION'] : nil # suggestion
-      )
+      ResultSet.new(:total => data['RES']['M'].to_i,
+                    :start_index => data['RES']['SN'].to_i,
+                    :end_index => data['RES']['EN'].to_i,
+                    :per_page => data['PARAM'].detect { |param| param["name"] == "num" }["value"].to_i,
+                    :suggestion => data['SPELLING'] ? data['SPELLING']['SUGGESTION'] : nil,
+                    :results => parse_results(data['RES']['R']))
+
     else
-      ResultSet.new(0, [], nil)
+      ResultSet.new
     end
   end
 
@@ -54,35 +57,56 @@ module GoogleCustomSearch
   private # -------------------------------------------------------------------
 
   ##
-  # Build search request URL.
+  # Build search request URI.
   #
-  def url(query, offset = 0, length = 20)
+  def build_uri(query, options = {})
+    options = { :offset => 0, :length => 20 }.merge(options)
+
     params = {
       :q      => query,
-      :start  => offset,
-      :num    => length,
+      :start  => options[:offset],
+      :num    => options[:length],
       :client => "google-csbe",
       :output => "xml_no_dtd",
-      :cx     => GOOGLE_SEARCH_CX
+      :cx     => GoogleCustomSearch.configuration.cx
     }
-    begin
-      params.merge!(GOOGLE_SEARCH_PARAMS)
-    rescue NameError
+
+    if GoogleCustomSearch.configuration.default_params
+      params.merge!(GoogleCustomSearch.configuration.default_params)
     end
-    "http://www.google.com/search?" + params.to_query
+
+    if GoogleCustomSearch.configuration.secure
+      uri = Addressable::URI.parse("https://www.google.com/cse")
+    else
+      uri = Addressable::URI.parse("http://www.google.com/cse")
+    end
+
+    uri.query_values = params
+    return uri
   end
 
   ##
   # Query Google, and make sure it responds.
   #
-  def fetch_xml(url)
-    begin
-      resp = nil
-      timeout(3) do
-        resp = Net::HTTP.get_response(URI.parse(url))
-      end
-    rescue SocketError, TimeoutError; end
-    (resp and resp.code == "200") ? resp.body : nil
+  def fetch_xml(uri)
+    http = Net::HTTP.new(uri.host, uri.port)
+
+    if uri.scheme == 'https'
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
+
+    http.read_timeout = GoogleCustomSearch.configuration.timeout
+
+    request = Net::HTTP::Get.new(uri.request_uri)
+    request.initialize_http_header({ 'User-Agent' => user_agent })
+
+    response = http.request(request)
+
+    raise GoogleCustomSearch::InvalidRequest if response.code.match(/[34]\d{2}/)
+    raise GoogleCustomSearch::ServerError if response.code.match(/5\d{2}/)
+
+    response.body
   end
 
   ##
@@ -93,12 +117,12 @@ module GoogleCustomSearch
     out = []
     results = [results] if results.is_a?(Hash) # no array if only one result
     results.each do |r|
-      out << Result.new(
-        r['U'],                               # url
-        r['T'].try(:sub, / \[[^\]]*\]$/, ''), # title
-        r['S'].try(:gsub, '<br>', '')         # desciption
-      )
+      out << Result.new(r)
     end
     out
+  end
+
+  def user_agent
+    "GoogleCustomSearch/#{GoogleCustomSearch::VERSION} - https://github.com/cosm/google_custom_search (Ruby/#{RUBY_VERSION})"
   end
 end

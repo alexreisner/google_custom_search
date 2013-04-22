@@ -19,6 +19,8 @@ end
 
 Dir['./spec/support/**/*.rb'].map {|f| require f}
 
+WebMock.disable_net_connect!
+
 $:.push File.expand_path("../lib", __FILE__)
 require 'google_custom_search'
 
