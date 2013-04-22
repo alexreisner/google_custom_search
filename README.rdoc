@@ -6,8 +6,7 @@ This project is a Ruby API to Google's Custom Search Engine (http://www.google.c
 
 If you want a Google-like search engine for your web site, why not use Google? For $100/yr (more if you have over 1,000 pages) you can get access to Google search results for your site in XML format. The google_custom_search gem helps you access this web service and publish the results on your site however you like (all covered under Google's acceptable use policy).
 
-Google Custom Search is currently compatible with Rails 3. It may well work with Rails 2.x but that hasn't been tested.
-
+Google Custom Search is currently compatible with Rails 3. It should also work with Rails 2.x but that hasn't been tested.
 
 == Install
 
