@@ -2,18 +2,14 @@
 # Add search functionality (via Google Custom Search). Protocol reference at:
 # http://www.google.com/coop/docs/cse/resultsxml.html
 #
-module GoogleCustomSearch
-  extend self
-  
-  ##
-  # Quick Struct-based class to hold a collection of search result data.
-  #
-  class ResultSet < Struct.new(:total, :pages, :suggestion); end
+require 'net/http'
+require 'active_support/core_ext'
 
-  ##
-  # Quick Struct-based class to hold data for a single search result.
-  #
-  class Result < Struct.new(:url, :title, :description); end
+module GoogleCustomSearch
+  autoload :ResultSet, 'result_set'
+  autoload :Result, 'result'
+
+  extend self
 
   ##
   # Search the site.
@@ -27,16 +23,11 @@ module GoogleCustomSearch
 
     # Extract and return search result data, if exists.
     if data['RES']
-      ResultSet.new(
-        data['RES']['M'].to_i,                                  # total
-        parse_results(data['RES']['R']),                        # pages
-        data['SPELLING'] ? data['SPELLING']['SUGGESTION'] : nil # suggestion
-      )
+      ResultSet.create(data)
     else
-      ResultSet.new(0, [], nil)
+      ResultSet.create_empty()
     end
   end
-  
   
   private # -------------------------------------------------------------------
   
@@ -63,6 +54,7 @@ module GoogleCustomSearch
   # Query Google, and make sure it responds.
   #
   def fetch_xml(url)
+    puts url if $debug
     begin
       resp = nil
       timeout(3) do
@@ -70,22 +62,5 @@ module GoogleCustomSearch
       end
     rescue SocketError, TimeoutError; end
     (resp and resp.code == "200") ? resp.body : nil
-  end
-  
-  ##
-  # Transform an array of Google search results (XML parsed by REXML) into
-  # a more useful format.
-  #
-  def parse_results(results)
-    out = []
-    results = [results] if results.is_a?(Hash) # no array if only one result
-    results.each do |r|
-      out << Result.new(
-        r['U'],                               # url
-        r['T'].try(:sub, / \[[^\]]*\]$/, ''), # title
-        r['S'].try(:gsub, '<br>', '')         # desciption
-      )
-    end
-    out
   end
 end
