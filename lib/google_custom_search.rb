@@ -18,10 +18,13 @@ module GoogleCustomSearch
   ##
   # Search the site.
   #
-  def search(query, offset = 0, length = 20)
+  def search(query, page = 1, params = {})
+    page    = page.to_i
+    length  = params.delete(:length) || 20
+    offset  = (page * length) - length
     
     # Get and parse results.
-    url = url(query, offset, length)
+    url = url(query, offset, length, params)
     return nil unless xml = fetch_xml(url)
     data = Hash.from_xml(xml)['GSP']
 
@@ -37,13 +40,12 @@ module GoogleCustomSearch
     end
   end
   
-  
   private # -------------------------------------------------------------------
   
   ##
   # Build search request URL.
   #
-  def url(query, offset = 0, length = 20)
+  def url(query, offset = 0, length = 20, advanced_params = {})
     params = {
       :q      => query,
       :start  => offset,
@@ -52,6 +54,7 @@ module GoogleCustomSearch
       :output => "xml_no_dtd",
       :cx     => GOOGLE_SEARCH_CX
     }
+    params.merge!(advanced_params)
     begin
       params.merge!(GOOGLE_SEARCH_PARAMS)
     rescue NameError
